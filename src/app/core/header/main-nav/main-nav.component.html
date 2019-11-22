@@ -1,0 +1,28 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-toolbar color="primary">
+      <mat-icon class="icon">code</mat-icon>
+      <span>Data Graph</span>
+      <span class="spacer"></span>
+      <a mat-list-item href="#">Home</a>
+      <a mat-list-item href="#">Dashboard</a>
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon color="primary">note_add</mat-icon>
+            <span>Data Management</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon color="primary">bookmarks</mat-icon>
+            <span>Reporting Engine</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon color="primary">account_circle</mat-icon>
+            <span>Admin</span>
+          </button>
+        </mat-menu>
+    </mat-toolbar>
+    <ng-content></ng-content>
+    <!-- Add Content Here -->
+</mat-sidenav-container>

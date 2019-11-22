@@ -1,0 +1,7 @@
+<p>simple-demo works!</p>
+<button class="btn btn-primary" [disabled]="!allowNewServer" (click)="onCreateServer()">This is a test</button>
+<p>{{ serverCreation }}</p>
+<p myHighlight>Test</p>
+<!-- Angular Directive -->
+<p *ngIf="serverCreated; else noserver" [ngStyle]="{backgroundColor: getColor()}" [ngClass]="{online:true}">Server was created, server name is</p>
+<ng-template #noserver><p>No server was created</p></ng-template>

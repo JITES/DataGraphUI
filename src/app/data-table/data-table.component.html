@@ -1,0 +1,40 @@
+<div class="mat-elevation-z8 data-table">
+  <table mat-table class="full-width-table" matSort aria-label="Elements">
+    <!-- Id Column -->
+    <ng-container matColumnDef="Period">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Period</th>
+      <td mat-cell *matCellDef="let row">{{row.Period}}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="Product">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+      <td mat-cell *matCellDef="let row">{{row.Product}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Region">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>
+      <td mat-cell *matCellDef="let row">{{row.Region}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Gross">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross</th>
+      <td mat-cell *matCellDef="let row">€{{row.Gross}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Margin">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Margin %</th>
+      <td mat-cell *matCellDef="let row">{{row.Margin}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator #paginator
+      [length]="dataSource?.data.length"
+      [pageIndex]="0"
+      [pageSize]="50"
+      [pageSizeOptions]="[25, 50, 100, 250]">
+  </mat-paginator>
+</div>

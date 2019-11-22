@@ -1,0 +1,38 @@
+*:focus {
+  outline: none !important;
+  border: 0 !important;
+}
+.mat-toolbar, .mat-toolbar h1, .mat-toolbar h2, .mat-toolbar h3, .mat-toolbar h4, .mat-toolbar h5, .mat-toolbar h6
+{
+  font:500 15px/32px Roboto,"Helvetica Neue",sans-serif;
+}
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+.icon{
+  margin: 0 10px;
+}
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.spacer{
+  flex:1 1 auto;
+}
+
+mat-toolbar a{
+  display: inline-block;
+  margin: 0 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+  height: 45px; 
+}

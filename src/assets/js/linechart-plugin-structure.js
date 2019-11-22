@@ -1,0 +1,324 @@
+export const lineChartD3 = {
+    name: "D3 LineChart",
+	uniqueId: '',
+    actions: {
+        getHTML: function () {
+            var uniqId = "linechart" + Math.floor((Math.random() * 1000) + 1);
+			this.uniqId = uniqId;
+            return '<style>div.tooltip {padding:5px;min-width:50px;position: absolute;text-align: center;width: auto;height: auto;padding: 2px;font: 12px sans-serif;background: lightsteelblue;border: 0px;border-radius: 8px;pointer-events: none;}</style><div class="d3-linechart" id="' + uniqId + '" ></div>';
+        },
+        getLabelName: function () {
+            return "linechart D3";
+        },
+        getName: function () {
+            return 'D3LineChart';
+        },
+        getCategory: function () {
+            return 'chart';
+        },
+        getIcon: function () {
+
+        },
+        getUniqueClass: function () {
+            return 'd3-linechart';
+        },
+        getConfs: function () {
+            return {
+				zoom: { type: boolean, values: [true, false], require: false },
+				margin: { type: 'object', data: { top: number, bottom: number, left: number, right: number }, required: false },
+				listGroup: { type: 'array', axis: '', data: ['a', 'b'], required: false },
+				xField: { type: 'string', require: true },
+				yField: { type: 'string', require: true },
+				tooltip: { type: boolean, values: [true, false], require: false }
+			};
+        },
+        registerEvents: function (id, events) {
+			// event registration logic;
+		},
+		getEvents: function () {
+			return [
+				{
+					pluginselector: '',
+					eventName: 'cick',
+					eventType: 'mouse'
+				}
+			];
+		},
+        getData: function (ID, globalOBJ, gridData, currentevent) {
+            return {};
+        },
+        setData: function (propObject, dataObj, id) {
+			var xField, yField, xTitle, yTitle, xColor, yColor, xLineColor;
+			var pointsData = [];
+			var margin = propObject.margin;
+			var width = parseInt(d3.select('#'+id).style('width'), 10);
+			width = width - margin.left - margin.right;
+            var height = 330 - margin.top - margin.bottom;
+			var svg = d3.select('#' + id)
+				.append("svg")
+				.attr("width", width + margin.left + margin.right)
+				.attr("height", height + margin.top + margin.bottom)
+				.append("g")
+				.attr("transform",
+				"translate(" + margin.left + "," + margin.top + ")");
+			/*Initializing x,y fields*/
+			xField = propObject.xField;
+			yField = propObject.yField;
+			
+			dataObj.forEach((data, index) => {
+				Array.prototype.push.apply(pointsData, data.data);
+			});
+
+			// Initialize chart title
+			if (propObject.chartTitle) {
+				svg.append("text")
+					.attr("x", (width / 2))
+					.attr("y", 0 - (margin.top / 2))
+					.attr("text-anchor", "middle")
+					.style("font-size", "20px")
+					.style("fill", propObject.chartTitleColor)
+					.style("text-decoration", "underline")
+					.text(propObject.chartTitle);
+			}
+			var x = d3.scaleLinear()
+				.domain(d3.extent(pointsData, function (d) { return d[xField]; }))
+				.range([0, width]);
+			var xAxis = svg.append("g").attr("id", "xaxis")
+				.attr("transform", "translate(0," + height + ")")
+				.call(d3.axisBottom(x));
+
+			// Add Y axis
+			var y = d3.scaleLinear()
+				.domain(d3.extent(pointsData, function (d) { return d[d['yField']]; }))
+				.range([height, 0]);
+			var yAxis = svg.append("g").attr("id", "yaxis").call(d3.axisLeft(y));
+
+			if (propObject.axisInfo.yAxis.length === 1) {
+				yTitle = propObject.axisInfo.yAxis[0].title;
+				yColor = propObject.axisInfo.yAxis[0].color;
+			}
+			// Adding single or multiple labels
+			var props =  propObject.axisInfo.xAxis.length;
+			propObject.axisInfo.xAxis.forEach((xData, index) => {
+				// Adding label to x-axis.
+				xAxis.append("text")
+					.attr("x", width/2)
+					.attr("y", margin.bottom - 10)
+					.text(xData.title)
+					.attr("font-family", "sans-serif")
+					.attr("font-size", "10px")
+					.attr("fill", "black")
+					.attr("font-size","1.2em")
+					.attr("text-anchor", "middle")
+					.attr("font-weight","bold");
+			  
+				});
+
+			// Adding label to y-axis
+			yAxis.append("text")
+				.attr("x", -(height / 4) - margin.left)
+				.attr("y", - (margin.left / 2))
+				.text(yTitle)
+				.attr("font-family", "sans-serif")
+				.attr("font-size", "20px")
+				.attr("fill", yColor)
+				.attr('transform', 'rotate(-90)')
+				.attr('text-anchor', 'middle');
+
+			// code for dotted Axis
+			if (propObject.dottedAxis) {
+				xAxis.attr("class", "line")
+					.style("stroke-dasharray", ("3, 3"));
+
+				yAxis.attr("class", "line")
+					.style("stroke-dasharray", ("3, 3"));
+			}
+
+			// Adding background image
+			if (propObject.backgroundImage) {
+				svg.append("image")
+					.attr("xlink:href", propObject.backgroundImage)
+					.attr("x", 3)
+					.attr("y", 0)
+					.attr("width", width)
+					.attr("height", height)
+					.attr("id", "fillImage");
+			}
+
+			// adding background color
+			if (propObject.backgroundColor) {
+				svg.append("rect")
+					.attr("width", width)
+					.attr("height", height)
+					.attr("fill", propObject.backgroundColor);
+				svg.append("g")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			}
+
+			// Initialize line with group a
+			var line = svg.append('g')
+				.attr("clip-path", "url(#clip)");			
+			if (propObject.dottedGraph) {
+				line.attr("class", "line")
+					.style("stroke-dasharray", ("3, 3"));
+			}
+
+			dataObj.forEach((data, index) => {
+				line.append("path").attr("id", "linepath")
+					.datum(data.data).attr("class", "line")
+					.attr("d", d3.line()
+						.x(function (d) { return x(+d[xField]) })
+						.y(function (d) { return y(+d[d['yField']]) })
+					)
+					.attr("stroke", propObject.axisInfo.xAxis[index].lineColor)
+					.style("stroke-width", 1)
+					.style("fill", "none");
+			});
+			
+			var dot = svg
+				.selectAll('circle')
+				.data(pointsData)
+				.enter()
+				.append('circle')
+				.attr("cx", function (d) { return x(+d[xField]) })
+				.attr("cy", function (d) { return y(+d[d['yField']]) })
+				.attr("r", 3.5)
+				.style("fill", "#bababa")
+
+			/*Initializing tooltip*/
+			if (propObject.tooltip) {
+				var div = d3.select("body").append("div")
+						.attr("class", "tooltip")
+						.style("opacity", 0);
+				d3.selectAll("circle").on("mouseover", function(d){
+					console.log('pagex  ', d);
+					div.transition()
+							.duration(200)
+							.style("opacity", .9);
+						div.html(xField + " : " + d[xField] + "<br/>" + d['yField'] + " : " + d[d['yField']])
+							.style("left", (d3.event.pageX) + "px")
+							.style("top", (d3.event.pageY - 28) + "px");
+				}).on("mouseout", function() {
+					div.transition()
+							.duration(500)
+							.style("opacity", 0);
+				});
+			}
+			//d3.selectAll('.axis').remove();
+			//Add a clipPath: everything out of this area won't be drawn.
+			if (propObject.zoom) {
+				var clip = svg.append("defs").append("svg:clipPath")
+					.attr("id", "clip")
+					.append("svg:rect")
+					.attr("width", width )
+					.attr("height", height )
+					.attr("x", 0)
+					.attr("y", 0);
+				// Add brushing
+				var brush = d3.brushX()                   // Add the brush feature using the d3.brush function
+					.extent([[0, 0], [width, height]])  // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+					.on("end", updateChart)
+				// Add the brushing
+				line
+					.append("g")
+					.attr("class", "brush")
+					.call(brush);
+				var idleTimeout
+                function idled() { idleTimeout = null; }
+				function updateChart() {
+
+					//var selectedName = d3.select(".listGroup").property("value");
+					// What are the selected boundaries?
+					var extent = d3.event.selection
+
+					// If no selection, back to initial coordinate. Otherwise, update X axis domain
+					if (!extent) {
+						if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+						x.domain([4, 8])
+					} else {
+						x.domain([x.invert(extent[0]), x.invert(extent[1])])
+						line.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+					}
+					// Update axis and line position
+					xAxis.transition().duration(1000).call(d3.axisBottom(x))
+					line
+						.selectAll('.line')
+						.transition()
+						.duration(1000)
+						.attr("d", d3.line()
+							.x(function (d) { return x(+d[xField]) })
+							.y(function (d) { return y(+d[d['yField']]) })
+						)
+
+					dot
+						.data(pointsData)
+						.transition()
+						.duration(1000)
+						.attr("cx", function (d) { return x(+d[xField]) })
+						.attr("cy", function (d) { return y(+d[d['yField']]) });
+
+				}
+			}
+
+		},
+		drawChart: function (propObject, dataObj, ID = '.class') {
+			var _this = this;
+			this.getPluginJsImports().forEach(function (src, index) {
+				var script = document.createElement('script');
+				script.setAttribute('src', src);
+				script.async = false;
+				script.onreadystatechange = script.onload = function () {
+					if (_this.getPluginJsImports().length - 1 == index) {
+						var chartHTML = _this.getHTML();
+						d3.select(ID).html(chartHTML);
+						var newProps = Object.assign(_this.getDefaultConfigs(), propObject);
+						_this.setData(newProps, dataObj, _this.uniqId);
+					}
+				};
+
+				document.getElementsByTagName('head')[0].appendChild(script);
+			})
+
+
+		},
+		loadScript: function () {
+
+		},
+        getDefaultConfigs: function () {
+            return { 
+				zoom: false, 
+				margin: { top: 10, right: 15, bottom: 50, left: 60 }, 
+				tooltip: false,
+				axisInfo: [{
+						title: 'X Axis',
+						color: 'red',
+					}],
+					yAxis:  [{
+						title: 'Y Axis',
+						color: 'red',
+					}]
+				}
+        },
+        refresh: function () {
+            return '';
+        },
+        getVersion: function () {
+            return "[1.0.0,1.0.1]";
+        },
+        tooltip: function () {
+            return "";
+        },
+        getPluginJsImports: function () {
+            var jsArray = ["https://d3js.org/d3.v4.js", "https://d3js.org/d3-scale-chromatic.v1.min.js"];
+            return jsArray;
+        },
+        getCSSFile: function () {
+            var cssArray = [];
+            return cssArray;
+        },
+		updateThemeClasses: function (OBJ) {
+			return [];
+		}
+
+    }
+}
