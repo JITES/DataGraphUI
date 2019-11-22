@@ -1,3 +1,8 @@
+DataGraph is a unique accelarator platform which provides customized solution for BI reporting. Integrates with multi backed technology platforms (New or Existing), Utilize open source technology stack and opens up Sales opportunities for complex analytical solutions.
+
+
+
+
 # D3Dash
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.6.
