@@ -1,7 +1,8 @@
-DataGraph is a unique accelarator platform which provides customized solution for BI reporting. Integrates with multi backed technology platforms (New or Existing), Utilize open source technology stack and opens up Sales opportunities for complex analytical solutions.
+# DataGraph
+DataGraph is a unique accelarator platform which provides customized solution for BI reporting. Integrates with multi backed technology platforms (New or Existing), Utilize open source technology stack and opens up sales opportunities for complex analytical solutions.
 
 
-
+----------------------------------------------------------------------------
 
 # D3Dash
 
