@@ -4,7 +4,7 @@ DataGraph is a unique accelarator platform which provides customized solution fo
 
 ----------------------------------------------------------------------------
 
-# D3Dash
+# Project Details
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.6.
 
